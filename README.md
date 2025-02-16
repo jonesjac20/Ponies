@@ -18,4 +18,6 @@ Each race is worth a single point per jockey - the winning jockey takes all the 
 
 It is envisioned that Ponies can be used to entertain the participants in a curling tournament or "bonspiel" while they are off the ice before or after their matches. A leaderboard can be created to show the most successful jockey's and a prizes can be awarded by the bonspiel organizers to add to the air of excitement at the bonspiel.
 
+It is further envisioned that Ponies can be applied to other games that are watched by groups of friends. For example, each at-bat in a baseball game could be used as the distinct game segment, with the jockeys being randomly assigned the conceivable outcomes of the at-bat. As noted above, the number of outcomes would equal the number of jockeys. Some example ponies (with more detailed outcomes noted if additional ponies are required) for a baseball at-bat are: No At-bat (hit by pitch, walk), Hit (single, double, triple, home run), Fielders Choice, and Out (strikeout swinging, strikeout looking, ground out, fly out).  
+
 To run the program, please use 'npm start'. This will initiate in dev mode. As far as production is concerned, I am going to implement the prod scritp at a later date.
