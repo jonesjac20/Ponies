@@ -1,45 +1,27 @@
-import './App.css'
-import { Table  } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import readPlayersCSV from './utils/readPlayersCSV';
+import Player from './components/player';
 
 function App() {
+    const [players, setPlayers] = useState<Player[]>([]);
 
-  useEffect(() => {
-    
-  })
+    useEffect(() => {
+        readPlayersCSV('./data/players.csv')
+            .then((data: Player[]) => setPlayers(data))
+            .catch((error: Error) => console.error('Error reading CSV file:', error));
+    }, []);
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Racing the Ponies!</h1>
-      </header>
-      <div>
-        <Table>
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Name</th>
-              <th>Age</th>
-              <th>Weight</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Secretariat</td>
-              <td>5</td>
-              <td>1200</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Seabiscuit</td>
-              <td>7</td>
-              <td>1100</td>
-            </tr>
-            </tbody>
-        </Table>
-      </div>
-    </div>
-  )
+    return (
+        <div>
+            <ul>
+                {players.map(player => (
+                    <li key={player.id}>
+                      {player.firstname} {player.lastname} - {player.points}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 }
 
 export default App
