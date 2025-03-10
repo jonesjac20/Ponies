@@ -1,42 +1,18 @@
-interface PlayerProps {
-    id: number;
-    rink_no: number;
-    rink_name: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    team: string;
-    points: number;
-}
+import React from 'react';
+import '../styles/PlayerComponent.css';
+import type { Player } from '../types';
+import { Card, CardTitle } from 'react-bootstrap';
 
-export default class Player {
-    id: number;
-    rink_no: number;
-    rink_name: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    team: string;
-    points: number;
-
-    constructor({ id, rink_no, rink_name, first_name, last_name, phone, team, points }: PlayerProps) {
-        this.id = id;
-        this.rink_no = rink_no;
-        this.rink_name = rink_name;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.phone = phone;
-        this.team = team;
-        this.points = points;
-    }
-
-    render() {
-        return (
-            <tr>
-                <td>{this.first_name} {this.last_name}</td>
-                <td>{this.team}</td>
-                <td>{this.points}</td>
-            </tr>
-        );
-    }
+export default function PlayerComponent({ player }: { player: Player }) {
+    // This will be an individual player. It should have their name, their points, and their team. 
+    // All other information is secondary and will be used for behind-the-scenes calculations.
+    return (
+        <div>
+            <Card bg='danger'>
+                <CardTitle className="name">{player.first_name} {player.last_name}</CardTitle>
+                <p>Team: <strong>{player.rink_name}</strong></p>
+                <p>Points: {player.points}</p>
+            </Card>
+        </div>
+    );
 }

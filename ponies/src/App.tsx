@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import Papa from 'papaparse';
 import PlayerComponent from './components/PlayerComponent';
-
-// Define the Player type
-interface Player {
-    id: number;
-    rink_no: number;
-    rink_name: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    team: string;
-    sheet: number;
-    points: number;
-}
+import { Player } from './types';
+import Controls from './components/Controls';
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
 
-    // Fetch the CSV file and parse it.
+    // Fetch the CSV file and parse it. The parsed data will be stored in the players state.
     useEffect(() => {
         fetch('/data/Players.csv') // Fetch CSV file
             .then(response => {
@@ -32,20 +22,25 @@ function App() {
                 if (!csvData) {
                     throw new Error("CSV data is empty or undefined.");
                 }
-    
-                console.log("Fetched CSV Data:", csvData); // Debugging: Log CSV content
-                
+
                 // Parse the data. The players constant will be an array of Player objects after parsing.
                 Papa.parse<Player>(csvData, {
                     header: true,
                     dynamicTyping: true,
                     complete: (result: Papa.ParseResult<Player>) => {
-                        console.log("Parsed CSV Data:", result.data); // Debugging: Log parsed data
                         const playersWithZeroPoints = result.data.map(player => ({
                             ...player,
                             points: 0
                         }));
-                        setPlayers(playersWithZeroPoints);
+
+                        // Retrieve points from local storage
+                        const storedPoints = JSON.parse(localStorage.getItem('playerPoints') || '{}');
+                        const playersWithStoredPoints = playersWithZeroPoints.map(player => ({
+                            ...player,
+                            points: storedPoints[player.id] || 0
+                        }));
+
+                        setPlayers(playersWithStoredPoints);
                     }
                 });
             })
@@ -53,17 +48,43 @@ function App() {
                 console.error("Error loading CSV file:", error);
             });
     }, []);
-    
+
+    // Save points to local storage whenever players state changes
+    useEffect(() => {
+        const points = players.reduce((acc, player) => {
+            acc[player.id] = player.points;
+            return acc;
+        }, {} as { [key: string]: number });
+
+        localStorage.setItem('playerPoints', JSON.stringify(points));
+    }, [players]);
+
+    const updatePlayerPoints = (id: number, points: number) => {
+        setPlayers(prevPlayers =>
+            prevPlayers.map(player =>
+                player.id === id ? { ...player, points } : player
+            )
+        );
+    };
 
     return (
         <div>
-            <ul>
-                {players.map(player => (
-                    <li key={player.id}>
-                      {player.first_name} {player.last_name} - {player.points}
-                    </li>
-                ))}
-            </ul>
+            <h1>Ponies Leaderboard</h1>
+            <div>
+                <Controls players={players} updatePlayerPoints={updatePlayerPoints} />
+            </div>
+            <div>
+                <Container fluid id="board">
+                    <Row className="flex-row">
+                        {players.sort((a, b) => b.points - a.points).map((player, index) => (
+                            <Col key={index} xs="auto">
+                                {/* Pass the player object to the PlayerComponent */}
+                                <PlayerComponent player={player} />
+                            </Col>
+                        ))}
+                    </Row>
+                </Container>
+            </div>
         </div>
     );
 }
