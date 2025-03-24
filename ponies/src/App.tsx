@@ -3,7 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Papa from 'papaparse';
 import PlayerComponent from './components/PlayerComponent';
 import { Player } from './types';
-import Controls from './components/Controls';
+import WinButton from './components/WinButton';
+import SearchBar from './components/SearchBar';
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
@@ -70,16 +71,20 @@ function App() {
     return (
         <div>
             <h1>Ponies Leaderboard</h1>
-            <div>
-                <Controls players={players} updatePlayerPoints={updatePlayerPoints} />
-            </div>
+            {/* Pass the players state and updatePlayerPoints function to the Controls component */}
+            <SearchBar players={players} />
+            {/* Display the leaderboard */}
             <div>
                 <Container fluid id="board">
                     <Row className="flex-row">
                         {players.sort((a, b) => b.points - a.points).map((player, index) => (
                             <Col key={index} xs="auto">
                                 {/* Pass the player object to the PlayerComponent */}
-                                <PlayerComponent player={player} />
+                                <PlayerComponent 
+                                    player={player} 
+                                    players={players} 
+                                    updatePlayerPoints={updatePlayerPoints} 
+                                />
                             </Col>
                         ))}
                     </Row>
