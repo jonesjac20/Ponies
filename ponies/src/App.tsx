@@ -3,11 +3,12 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Papa from 'papaparse';
 import PlayerComponent from './components/PlayerComponent';
 import { Player } from './types';
-import WinButton from './components/WinButton';
 import SearchBar from './components/SearchBar';
+import "./styles/App.css";
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
+    const [foundList, setFoundList] = useState<Player[]>([]);
 
     // Fetch the CSV file and parse it. The parsed data will be stored in the players state.
     useEffect(() => {
@@ -58,34 +59,52 @@ function App() {
         }, {} as { [key: string]: number });
 
         localStorage.setItem('playerPoints', JSON.stringify(points));
+        setFoundList(players);
     }, [players]);
 
     const updatePlayerPoints = (id: number, points: number) => {
-        setPlayers(prevPlayers =>
-            prevPlayers.map(player =>
-                player.id === id ? { ...player, points } : player
-            )
-        );
+        const newPlayerOrder = players.map(player => player.id === id ? { ...player, points } : player);
+        setPlayers(newPlayerOrder);
     };
+    
+    const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const foundList: Player[] = [];
+        const value = event.target.value.split(' ').join().toLocaleLowerCase();
+        // Searches by first name and last name conjoined and set lowercase.
+        for (const p of players) {
+            const target = (p.first_name + ' ' + p.last_name).toLocaleLowerCase().split(' ').join();
+            for (let i = 0; i < p.first_name.length + p.last_name.length; i++) {
+                if (target.substring(i, i + value.length) === value.substring(i, i + value.length)) {
+                    foundList.push(p);
+                    break;
+                }
+            }
+        }
+        // console.log(foundList);
+        setFoundList(foundList);
+    }
 
     return (
-        <div>
-            <h1>Ponies Leaderboard</h1>
+        <div className="app-container">
+            <h1 className="app-title">Ponies Leaderboard</h1>
             {/* Pass the players state and updatePlayerPoints function to the Controls component */}
-            <SearchBar players={players} />
+            <SearchBar handleSearch={handleSearchInputChange} />
             {/* Display the leaderboard */}
-            <div>
+            <div className="board-container">
                 <Container fluid id="board">
                     <Row className="flex-row">
-                        {players.sort((a, b) => b.points - a.points).map((player, index) => (
-                            <Col key={index} xs="auto">
-                                {/* Pass the player object to the PlayerComponent */}
-                                <PlayerComponent 
-                                    player={player} 
-                                    players={players} 
-                                    updatePlayerPoints={updatePlayerPoints} 
-                                />
-                            </Col>
+                        {foundList.sort((a, b) => b.points - a.points).map((player, index) => (
+                            <div key={index}>
+                                <Col xs="auto">
+                                    {/* Pass the player object to the PlayerComponent */}
+                                    <PlayerComponent 
+                                        player={player} 
+                                        players={players} 
+                                        updatePlayerPoints={updatePlayerPoints} 
+                                    />
+                                </Col>
+                                <br />
+                            </div>
                         ))}
                     </Row>
                 </Container>

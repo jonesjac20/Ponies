@@ -1,8 +1,21 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+.background {
+  background-image: url("/wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 .logo {
@@ -39,4 +52,27 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.app-container {
+    background-image: url("/wallpaper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-title {
+    margin: 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.board-container {
+    flex: 1;
+    padding: 20px;
 }

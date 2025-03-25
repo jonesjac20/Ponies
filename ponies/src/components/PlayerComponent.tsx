@@ -13,19 +13,19 @@ export default function PlayerComponent({
     players: Player[];
     updatePlayerPoints: (id: number, points: number) => void;
 }) {
-    // This will be an individual player. It should have their name, their points, and their team. 
-    // All other information is secondary and will be used for behind-the-scenes calculations.
     return (
-        <div>
-            <Card bg="danger">
-                <CardTitle className="name">
+        <div className="card-container">
+            <Card>
+                <CardTitle className="card-title">
                     {player.first_name} {player.last_name}
                 </CardTitle>
-                <p>
+                <p className="card-details">
                     Team: <strong>{player.rink_name}</strong>
                 </p>
-                <p>Points: {player.points}</p>
-                <WinButton id={player.id} players={players} updatePlayerPoints={updatePlayerPoints} />
+                <p className="card-details">Points: {player.points}</p>
+                <div className="win-button-container">
+                    <WinButton id={player.id} players={players} updatePlayerPoints={updatePlayerPoints} />
+                </div>
             </Card>
         </div>
     );

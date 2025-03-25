@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/PlayerComponent.css';
-import SearchBar from './SearchBar';
 import { Form, Button } from 'react-bootstrap';
 import { Player } from '../types';
+import '../styles/WinButton.css';
 
 interface WinButtonProps {
     players: Player[];
@@ -19,7 +18,6 @@ export default function WinButton(props: WinButtonProps) {
     }, [props.id]);
     function handleWin() {
         console.log('handleWin called');
-        // Check if both first and last name are entered
         if (!id) {
             alert('Please enter a player ID');
             return;
@@ -43,7 +41,7 @@ export default function WinButton(props: WinButtonProps) {
         <>
         <Form>
             <Form.Group>
-                <Button variant="danger" type="button" onClick={handleWin}>
+                <Button variant="danger" type="button" onClick={() => handleWin}>
                     Won the Race!
                 </Button>
             </Form.Group>
