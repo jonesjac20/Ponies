@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Papa from 'papaparse';
 import PlayerComponent from './components/PlayerComponent';
-import { Player } from './types';
+import { Player, Race, Team } from './types';
 import SearchBar from './components/SearchBar';
 import "./styles/App.css";
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
     const [foundList, setFoundList] = useState<Player[]>([]);
+
+    const [teams, setTeams] = useState(new Map<string, Team>());
 
     // Fetch the CSV file and parse it. The parsed data will be stored in the players state.
     useEffect(() => {
@@ -43,6 +45,27 @@ function App() {
                         }));
 
                         setPlayers(playersWithStoredPoints);
+
+                        // Create a Map to group players by their rink_name
+                        const teamMap = new Map<string, Team>();
+
+                        for (const p of playersWithStoredPoints) {
+                            if (!teamMap.has(p.rink_name)) {
+                                // If the team doesn't exist, create a new team
+                                teamMap.set(p.rink_name, {
+                                    id: teamMap.size,
+                                    name: p.rink_name,
+                                    players: [p],
+                                });
+                            } else {
+                                // If the team exists, add the player to the team's players array
+                                teamMap.get(p.rink_name)?.players.push(p);
+                            }
+                        }
+
+                        // Save the Map instead of converting it to an array
+                        setTeams(teamMap);
+                        console.log(teamMap);
                     }
                 });
             })

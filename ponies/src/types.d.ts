@@ -10,3 +10,15 @@ export interface Player {
     sheet: number;
     points: number;
 }
+
+export interface Team {
+    id: number,
+    name: string,
+    players: Player[],
+}
+
+// Define the Race type
+export interface Race {
+    id: number,
+    teams: Team[],
+}
