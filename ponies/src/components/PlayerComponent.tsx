@@ -1,42 +1,32 @@
-interface PlayerProps {
-    id: number;
-    rink_no: number;
-    rink_name: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    team: string;
-    points: number;
-}
+import React from 'react';
+import '../styles/PlayerComponent.css';
+import type { Player } from '../types';
+import { Card, CardTitle } from 'react-bootstrap';
+import WinButton from './WinButton';
 
-export default class Player {
-    id: number;
-    rink_no: number;
-    rink_name: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    team: string;
-    points: number;
-
-    constructor({ id, rink_no, rink_name, first_name, last_name, phone, team, points }: PlayerProps) {
-        this.id = id;
-        this.rink_no = rink_no;
-        this.rink_name = rink_name;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.phone = phone;
-        this.team = team;
-        this.points = points;
-    }
-
-    render() {
-        return (
-            <tr>
-                <td>{this.first_name} {this.last_name}</td>
-                <td>{this.team}</td>
-                <td>{this.points}</td>
-            </tr>
-        );
-    }
+export default function PlayerComponent({
+    player,
+    players,
+    updatePlayerPoints,
+}: {
+    player: Player;
+    players: Player[];
+    updatePlayerPoints: (id: number, points: number) => void;
+}) {
+    return (
+        <div className="card-container">
+            <Card>
+                <CardTitle className="card-title">
+                    {player.first_name} {player.last_name}
+                </CardTitle>
+                <p className="card-details">
+                    Team: <strong>{player.rink_name}</strong>
+                </p>
+                <p className="card-details">Points: {player.points}</p>
+                <div className="win-button-container">
+                    <WinButton id={player.id} players={players} updatePlayerPoints={updatePlayerPoints} />
+                </div>
+            </Card>
+        </div>
+    );
 }
