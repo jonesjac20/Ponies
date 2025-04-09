@@ -1,51 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { Player } from '../types';
+import { Player, Team } from '../types';
 import '../styles/WinButton.css';
+import TeamContext from '../context/TeamContext';
 
-interface WinButtonProps {
-    players: Player[];
-    id: number;
-    updatePlayerPoints: (id: number, points: number) => void;
-}
-
-export default function WinButton(props: WinButtonProps) {
-    const [id, setId] = useState<number>(props.id);
-    const [points, setPoints] = useState<number>(localStorage.getItem('points') ? parseInt(localStorage.getItem('points') || '0') : 0);
-
-    useEffect(() => {
-        setId(props.id);
-    }, [props.id]);
+export default function WinButton() {
+    const points = localStorage.getItem('points') ? JSON.parse(localStorage.getItem('points') || '') : 0;
     function handleWin() {
-        console.log('handleWin called');
-        if (!id) {
-            alert('Please enter a player ID');
-            return;
-        }
-        else {
-            // Update the player's points
-            const player = props.players.find(player => player.id === id);
-            if (player) {
-                // Update the player's points
-                props.updatePlayerPoints(id, points + 1);
-                setPoints(points + 1);
-                localStorage.setItem('points', (points + 1).toString());
-            }
-            else {
-                alert('Player not found');
-            }
-        }
+        localStorage.setItem('points', JSON.stringify(points + 1));
     }
 
     return (
         <>
-        <Form>
-            <Form.Group>
-                <Button variant="danger" type="button" onClick={() => handleWin}>
-                    Won the Race!
-                </Button>
-            </Form.Group>
-        </Form>
+        <Button onClick={handleWin} className="win-button" />
         </>
-    );
+    )
 }

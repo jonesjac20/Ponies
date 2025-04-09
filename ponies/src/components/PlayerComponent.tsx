@@ -1,18 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import '../styles/PlayerComponent.css';
-import type { Player } from '../types';
+import type { Player, Team } from '../types';
 import { Card, CardTitle } from 'react-bootstrap';
 import WinButton from './WinButton';
-
-export default function PlayerComponent({
-    player,
-    players,
-    updatePlayerPoints,
-}: {
-    player: Player;
-    players: Player[];
-    updatePlayerPoints: (id: number, points: number) => void;
-}) {
+import TeamContext from '../context/TeamContext';
+export default function PlayerComponent(props: { player: Player }) {
+    const player = props.player;
     return (
         <div className="card-container">
             <Card>
@@ -24,7 +17,7 @@ export default function PlayerComponent({
                 </p>
                 <p className="card-details">Points: {player.points}</p>
                 <div className="win-button-container">
-                    <WinButton id={player.id} players={players} updatePlayerPoints={updatePlayerPoints} />
+                    <WinButton />
                 </div>
             </Card>
         </div>
