@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
 import Papa from 'papaparse';
-import PlayerComponent from './components/PlayerComponent';
-import { Player, Team } from './types';
-import SearchBar from './components/SearchBar';
+import { Player } from './types';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "./styles/App.css";
 import TeamContext from './context/TeamContext';
-import PoniesTabs from './PoniesTabs';
-import { useNavigate } from 'react-router-dom';
+import NavTabs from './PoniesTabs';
+import Leaderboard from './screens/Leaderboard'; // Import the Leaderboard component
+import Admin from './screens/Admin'; // Import the Admin component
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
-    const [storedPoints, setStoredPoints] = useState(localStorage.getItem('playerPoints') || '{}');
-    const [teamsList, setTeams] = useState(new Map<string, Team>());
-
-    // Fetch the CSV file and parse it. The parsed data will be stored in the players state, as well as the teams stored in the teamsList state.
+    const [teamsList, setTeams] = useState(new Map<string, Player[]>());
+    
+    // Parses data from XML and sets players and teamsList states.
     useEffect(() => {
-        fetch('/data/Players.csv') // Fetch CSV file
+        fetch('/data/Players.csv')
             .then(response => {
-                // Check the file imported correctly
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -29,43 +26,23 @@ function App() {
                     throw new Error("CSV data is empty or undefined.");
                 }
 
-                // Parse the data. The players constant will be an array of Player objects after parsing.
                 Papa.parse<Player>(csvData, {
                     header: true,
                     dynamicTyping: true,
                     complete: (result: Papa.ParseResult<Player>) => {
-                        const playersWithZeroPoints = result.data.map(player => ({
-                            ...player,
-                            points: 0
-                        }));
+                        const res = result.data;
+                        setPlayers(res);
 
-                        // Retrieve points from local storage
-                        const storedPoints = JSON.parse(localStorage.getItem('playerPoints') || '{}');
-                        const playersWithStoredPoints = playersWithZeroPoints.map(player => ({
-                            ...player,
-                            points: storedPoints[player.id] || 0
-                        }));
+                        const teamMap = new Map<string, Player[]>();
 
-                        setPlayers(playersWithStoredPoints);
-
-                        // Create a Map to group players by their rink_name
-                        const teamMap = new Map<string, Team>();
-
-                        for (const p of playersWithStoredPoints) {
-                            if (!teamMap.has(p.rink_name)) {
-                                // If the team doesn't exist, create a new team
-                                teamMap.set(p.rink_name, {
-                                    id: teamMap.size,
-                                    name: p.rink_name,
-                                    players: [p],
-                                });
-                            } else {
-                                // If the team exists, add the player to the team's players array
-                                teamMap.get(p.rink_name)?.players.push(p);
+                        for (const p of res) {
+                            const teamName = p.rink_name;
+                            if (!teamMap.has(teamName)) {
+                                teamMap.set(teamName, []);
                             }
+                            teamMap.get(teamName)?.push(p);
                         }
 
-                        // Save the Map instead of converting it to an array
                         setTeams(teamMap);
                         console.log(teamMap);
                     }
@@ -76,22 +53,18 @@ function App() {
             });
     }, []);
 
-    // Initializes storage, if needed.
-    useEffect(() => {
-        const storedPoints = localStorage.getItem('playerPoints');
-        // Initialize local storage to 0. This will be a map of player IDs to points.
-        if (!storedPoints) {
-            players.map(player => {
-                localStorage.setItem('playerPoints', JSON.stringify({ [player.id]: 0 }));
-            })
-        }
-    }, [players]);  
-
     return (
-        <TeamContext.Provider value={teamsList}>
-            <PoniesTabs />
+        <TeamContext.Provider value={{ teamsList, players }}>
+            <h1>Playing the Ponies!</h1>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<NavTabs />}>
+                        <Route path="screens/Leaderboard" element={<Leaderboard />} />
+                        <Route path="screens/Admin" element={<Admin />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
         </TeamContext.Provider>
-        
     );
 }
 

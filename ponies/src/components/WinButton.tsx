@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { Player, Team } from '../types';
-import '../styles/WinButton.css';
+import '../styles/App.css';
 import TeamContext from '../context/TeamContext';
 
 export default function WinButton() {

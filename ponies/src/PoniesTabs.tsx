@@ -1,22 +1,16 @@
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Leaderboard from './screens/Leaderboard';
-import Admin from './screens/Admin';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import './styles/App.css';
 
-export default function PoniesTabs() {
+export default function NavTabs() {
     return (
-        <Router>
-            <nav>
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/leaderboard">Leaderboard</Link></li>
-                    <li><Link to="/admin">Admin</Link></li>
-                </ul>
-            </nav>
-            <Routes>
-                <Route path="/" element={<div>Home</div>} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/admin" element={<Admin />} />
-            </Routes>
-        </Router>
+        <div className="nav-tabs">
+            <NavLink to="/screens/Leaderboard" className="active">
+                Leaderboard
+            </NavLink>
+            <NavLink to="/screens/Admin" className="active">
+                Admin
+            </NavLink>
+        </div>
     );
 }

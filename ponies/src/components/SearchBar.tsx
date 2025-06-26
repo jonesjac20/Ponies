@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/SearchBar.css';
+import '../styles/App.css';
 
 export default function SearchBar({
     handleSearch
@@ -7,14 +7,13 @@ export default function SearchBar({
     handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
     return (
-        <div className="search-bar-container">
+        <div className="center-container">
             <input
                 type="text"
                 className="search-input"
                 placeholder="Search players..."
                 onChange={handleSearch}
             />
-            <button className="search-button">Search</button>
         </div>
     );
 }

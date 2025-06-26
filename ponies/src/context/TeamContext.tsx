@@ -1,6 +1,9 @@
 import { createContext } from 'react';
-import { Team } from '../types';
+import { Player } from '../types';
 
-const TeamContext = createContext<Map<string, Team>>(new Map());
+const TeamContext = createContext({
+  teamsList: new Map<string, Player[]>(), // The Teams map
+  players: [] as Player[],          // The Player array
+});
 
 export default TeamContext;
