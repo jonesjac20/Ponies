@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import PlayerComponent from './components/PlayerComponent';
 import { Player, Team } from './types';
-import SearchBar from './components/SearchBar';
 import "./styles/App.css";
 import TeamContext from './context/TeamContext';
 import PoniesTabs from './PoniesTabs';
-import { useNavigate } from 'react-router-dom';
 
 function App() {
     const [players, setPlayers] = useState([] as Player[]);
-    const [storedPoints, setStoredPoints] = useState(localStorage.getItem('playerPoints') || '{}');
     const [teamsList, setTeams] = useState(new Map<string, Team>());
 
     // Fetch the CSV file and parse it. The parsed data will be stored in the players state, as well as the teams stored in the teamsList state.

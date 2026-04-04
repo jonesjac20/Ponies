@@ -1,13 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Player, Race, Team } from '../types';
+import { Player } from '../types';
 import SearchBar from '../components/SearchBar';
 import TeamContext from '../context/TeamContext';
 import PlayerComponent from '../components/PlayerComponent';
 
 export default function Leaderboard() {
     const teamsList = useContext(TeamContext);
-    const players = useContext(TeamContext);
+    const players = useMemo(() => {
+        const list: Player[] = [];
+        for (const team of teamsList.values()) {
+            list.push(...team.players);
+        }
+        return list;
+    }, [teamsList]);
     const [foundList, setFoundList] = useState<Player[]>([]);
 
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,9 +34,8 @@ export default function Leaderboard() {
     }
 
     return (
-        <>
+        <div className="page-content page-content--wide">
             <SearchBar handleSearch={handleSearchInputChange} />
-            {/* Display the leaderboard */}
             <div className="board-container">
                 <Container fluid id="board">
                     <Row className="flex-row">
@@ -48,6 +53,6 @@ export default function Leaderboard() {
                     </Row>
                 </Container>
             </div>
-        </>
+        </div>
     )
 };

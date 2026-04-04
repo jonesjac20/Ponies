@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { Player, Team } from '../types';
+import { Button } from 'react-bootstrap';
 import '../styles/WinButton.css';
-import TeamContext from '../context/TeamContext';
 
 export default function WinButton() {
     const points = localStorage.getItem('points') ? JSON.parse(localStorage.getItem('points') || '') : 0;

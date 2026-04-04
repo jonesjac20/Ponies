@@ -1,8 +1,9 @@
 export default function Admin() {
     return (
-        <div>
-            <h1>Admin</h1>
-            <p>This is the admin page.</p>
+        <div className="page-content page-content--centered">
+            <p className="page-copy">
+                Tools and settings for organizers will live here.
+            </p>
         </div>
     );
 }

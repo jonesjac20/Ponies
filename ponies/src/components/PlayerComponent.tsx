@@ -1,9 +1,7 @@
-import React, {useContext} from 'react';
 import '../styles/PlayerComponent.css';
-import type { Player, Team } from '../types';
+import type { Player } from '../types';
 import { Card, CardTitle } from 'react-bootstrap';
 import WinButton from './WinButton';
-import TeamContext from '../context/TeamContext';
 export default function PlayerComponent(props: { player: Player }) {
     const player = props.player;
     return (

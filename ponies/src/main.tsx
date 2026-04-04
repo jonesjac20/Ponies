@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Ponies from './Ponies.tsx'
+import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <Ponies />
+  <App />
 )

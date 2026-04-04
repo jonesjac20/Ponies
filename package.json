@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "dev": "npm --prefix ponies run dev",
+    "build": "npm --prefix ponies run build",
+    "preview": "npm --prefix ponies run preview",
+    "lint": "npm --prefix ponies run lint"
+  },
   "dependencies": {
     "react-bootstrap": "^2.10.9"
   }
